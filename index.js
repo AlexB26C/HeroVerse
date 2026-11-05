@@ -1,4 +1,4 @@
-import Heroe from"./Heroes.js";
+import Heroe from"./Heroe.js";
 
 const heroes = [
     new Heroe(1, "Negricius", "Llorar desconsoladamente provoca a toda la grada rival", "La afición del Valencia y ver a Rodri levantando un Balón de Oro", "Victimista, arrogante y provocador", 22, 93, 67),
@@ -105,8 +105,18 @@ function addHeroes(name, superpoder, debilidad, personalidad, fuerza, velocidad,
     heroes.push(new Heroe(nuevoId, name, superpoder, debilidad, personalidad, fuerza, velocidad, inteligencia));
 }
 
-function filterHeroes() {
+function filterHeroes(nombreBuscado="", poderMinimo = 0) {
+    actualizarEstadisticas();
 
+    let heroesFiltrados = heroes.filter(heroe => {
+        let coincideNombre = heroe.name.toLowerCase().includes(nombreBuscado.toLowerCase());
+
+        let coincidePoder = heroe.nivelDePoder >= poderMinimo;
+
+        return coincideNombre && coincidePoder;
+    })
+
+    return heroesFiltrados;
 }
 
 function generateRandomHeroe() {
@@ -124,10 +134,14 @@ function generateRandomHeroe() {
     heroes.push(new Heroe(nuevoId, nombreRandom, poderRandom, debilidadRandom, personalidadRandom, fuerzaRandom, velocidadRandom, inteligenciaRandom));
 }
 
-//Se hace la media de las tres propiedades y luego le inyecta al heroe una nieva propiedad "nivelDePoder" con la media de las tres
+//Se hace la media de las tres propiedades y luego le inyecta al heroe una nueva propiedad "nivelDePoder" con la media de las tres
 function calcularEstadisticas(heroe){
     let  media = (heroe.fuerza + heroe.velocidad + heroe.inteligencia)/3;
     heroe.nivelDePoder = Math.round(media);
 
     return heroe.nivelDePoder;
+}
+
+function actualizarEstadisticas (){
+    heroes.forEach(heroe => calcularEstadisticas(heroe));
 }
